@@ -50,15 +50,15 @@
           shape.lineTo(x+Math.cos(r)*-w - Math.sin(r)*h, y+Math.sin(r)*-w + Math.cos(r)*h);
         }
 
-        var x = Math.random()*2 - 1;
+        var x = (Math.random() - 0.5)*1.5;
         var shape = new THREE.Shape();
         addRect(shape,x,1, 2,2, 0);
         shape.holes.push(new THREE.Path());
         shape.holes.push(new THREE.Path());
         shape.holes.push(new THREE.Path());
-        addRect(shape.holes[0], x, 1.45, 0.3,0.3, 0);
-        addRect(shape.holes[1], x-0.5,1, 0.6,0.2, Math.PI*Math.random());
-        addRect(shape.holes[2], x+0.5,1, 0.6,0.2, Math.PI*Math.random());
+        addRect(shape.holes[0], x, 1.5, 0.4,0.4, 0);
+        addRect(shape.holes[1], x-0.5,1, (Math.random()<0.5)?0.2:0.6,0.2, Math.PI*Math.random());
+        addRect(shape.holes[2], x+0.5,1, (Math.random()<0.5)?0.2:0.6,0.2, Math.PI*Math.random());
 
         var extrudeSettings = {
         	steps: 2,
@@ -86,14 +86,18 @@
 				scene.add( camera );
 
 				crosshair = new THREE.Mesh(
-					new THREE.RingBufferGeometry( 0.02, 0.04, 32 ),
+					new THREE.RingBufferGeometry( 0.14, 0.15, 4 ),
 					new THREE.MeshBasicMaterial( {
 						color: 0xffffff,
 						opacity: 0.5,
 						transparent: true
 					} )
 				);
-				crosshair.position.z = - 2;
+        crosshair.rotation.z = Math.PI/4;
+				crosshair.position.z = -0.3;
+				camera.add( crosshair );
+        crosshair = crosshair.clone();
+        crosshair.position.z = -0.2;
 				camera.add( crosshair );
 
 				room = new THREE.LineSegments(
@@ -294,7 +298,7 @@
           barrier => { scene.remove(barrier); barrier.removeMe = true; }
         );
         barriers = barriers.filter( barrier => !("removeMe" in barrier) );
-        while (barriers.length<BARRIERCOUNT) {
+        if (barriers.length<BARRIERCOUNT) {
           var object = createBarrier();
           object.position.z = BARRIERSTARTPOSITION;
           barriers.push(object);
