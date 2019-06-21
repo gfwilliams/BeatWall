@@ -11,3 +11,10 @@ It should have (but doesn't currently have):
 * Music
 * Level designer
 * Fancy graphics
+
+Uses
+----
+
+* WebGL/WebVR/WebXR
+* THREE.js
+* https://github.com/floorplanner/polygon-tools

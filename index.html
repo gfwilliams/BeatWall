@@ -17,11 +17,13 @@
 		<script src="js/three.js"></script>
 		<script src="js/WebVR.js"></script>
 		<script src="js/BoxLineGeometry.js"></script>
+		<script src="js/polygon-tools.min.js"></script>
+		<script src="js/utils.js"></script>
 
 		<script>
 
       var BARRIERSPACING = 2;
-      var BARRIERCOUNT = 4;
+      var BARRIERCOUNT = 0;
       var BARRIERSTARTPOSITION = -(1 + BARRIERCOUNT*BARRIERSPACING); // where barriers are created
       var BARRIERENDPOSITION = 1; // point at which barriers are deleted
 
@@ -32,6 +34,7 @@
 			var camera, scene, raycaster, renderer;
 			var room;
       var barriers = [];
+			var playerMeshes = [];
 			var isMouseDown = false;
 
 			var INTERSECTED;
@@ -101,6 +104,12 @@
         crosshair = crosshair.clone();
         crosshair.position.z = -0.2;
 				camera.add( crosshair );
+				var geometry = new THREE.BoxBufferGeometry( 0.15, 0.15, 0.15 );
+				var mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
+				// TODO: disable visibility of mesh?
+				playerMeshes.push(mesh);
+        camera.add(mesh); // not visible because around head
+
 
 				room = new THREE.LineSegments(
 					new THREE.BoxLineGeometry( 4, 4, 25, 8, 8, 50 ),
@@ -137,12 +146,16 @@
         controller1 = renderer.vr.getController( 0 );
         //controller1.addEventListener( 'selectstart', onSelectStart );
         //controller1.addEventListener( 'selectend', onSelectEnd );
-        controller1.add(new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) ));
+				var mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
+				playerMeshes.push(mesh);
+        controller1.add(mesh);
         scene.add( controller1 );
         controller2 = renderer.vr.getController( 1 );
         //controller2.addEventListener( 'selectstart', onSelectStart );
         //controller2.addEventListener( 'selectend', onSelectEnd );
-        controller2.add(new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) ));
+				var mesh = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
+				playerMeshes.push(mesh);
+        controller2.add(mesh);
         scene.add( controller2 );
 
 				renderer.domElement.addEventListener( 'mousedown', onMouseDown, false );
